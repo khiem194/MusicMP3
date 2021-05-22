@@ -28,6 +28,7 @@ class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
 
     override fun onItemClick(position: Int) {
 
+
     }
 
     private fun checkPermission() {
