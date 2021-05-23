@@ -20,7 +20,8 @@ import com.khiem.musicmp3.model.Music
 import com.khiem.musicmp3.service.MusicService
 import kotlinx.android.synthetic.main.fragment_list_music.*
 
-class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
+@Suppress("DEPRECATION")
+class ListMusicFragment : BaseFragment(), MusicAdapter.IMusic {
     private var listSongs = mutableListOf<Music>()
 
     override val layoutResId: Int
@@ -39,7 +40,7 @@ class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
         val intent = Intent(context, MusicService::class.java)
 
         intent.putExtra(MyAction.ACTION_MUSIC, position)
-        intent.putExtra(MyAction.ACTION_LIST_MUSIC, Gson().toJson(listSongs[position]))
+        intent.putExtra(MyAction.ACTION_LIST_MUSIC, Gson().toJson(listSongs))
         requireContext().startService(intent)
     }
 
@@ -48,6 +49,7 @@ class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
         val tran = manager.beginTransaction()
         val fr = PlayMusicFragment()
         tran.replace(R.id.fl_music, fr)
+        tran.addToBackStack(PlayMusicFragment.TAG)
         tran.commit()
     }
 
@@ -98,7 +100,7 @@ class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
             if (cursor.moveToFirst()) {
                 do {
                     val songUrl: String =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                        cursor.getString(cursor.getColumnIndex("_data"))
                     val songAuthor: String? =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                     val songName: String =
