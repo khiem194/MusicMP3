@@ -3,6 +3,7 @@ package com.khiem.musicmp3.fragment
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothGattCharacteristic
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -11,9 +12,12 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.khiem.musicmp3.R
+import com.khiem.musicmp3.action.MyAction
 import com.khiem.musicmp3.adapter.MusicAdapter
 import com.khiem.musicmp3.model.Music
+import com.khiem.musicmp3.service.MusicService
 import kotlinx.android.synthetic.main.fragment_list_music.*
 
 class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
@@ -27,8 +31,24 @@ class ListMusicFragment() : BaseFragment(), MusicAdapter.IMusic {
     }
 
     override fun onItemClick(position: Int) {
+        nextFragment()
+        sendMusicToService(position)
+    }
 
+    private fun sendMusicToService(position: Int) {
+        val intent = Intent(context, MusicService::class.java)
 
+        intent.putExtra(MyAction.ACTION_MUSIC, position)
+        intent.putExtra(MyAction.ACTION_LIST_MUSIC, Gson().toJson(listSongs[position]))
+        requireContext().startService(intent)
+    }
+
+    private fun nextFragment() {
+        val manager = requireActivity().supportFragmentManager
+        val tran = manager.beginTransaction()
+        val fr = PlayMusicFragment()
+        tran.replace(R.id.fl_music, fr)
+        tran.commit()
     }
 
     private fun checkPermission() {
