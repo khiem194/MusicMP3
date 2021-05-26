@@ -13,17 +13,9 @@ import com.khiem.musicmp3.R
 import com.khiem.musicmp3.model.Music
 import kotlinx.android.synthetic.main.item_music.view.*
 
-class MusicAdapter : RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
-    private var musics = mutableListOf<Music>()
-    var listener: IMusic
-
-    constructor(
-        music: MutableList<Music>,
-        listener: IMusic
-    ) {
-        this.musics = music
-        this.listener = listener
-    }
+class MusicAdapter(music: MutableList<Music>, var listener: IMusic) :
+    RecyclerView.Adapter<MusicAdapter.MusicViewHolder>() {
+    private var musics = music
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
