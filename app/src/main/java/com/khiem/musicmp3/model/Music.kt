@@ -11,7 +11,7 @@ data class Music(
     var songUrl: String? = null,
     var albumID: Long? = null,
     var uriImage: String? = null,
-    var duration: Long? = null
+    var duration: Int? = null
 ) : Parcelable {
     fun getUri() : Uri{
         return Uri.parse(uriImage)

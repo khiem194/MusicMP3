@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.khiem.musicmp3.R
+import com.khiem.musicmp3.Utils
 import com.khiem.musicmp3.model.Music
 import kotlinx.android.synthetic.main.item_music.view.*
 

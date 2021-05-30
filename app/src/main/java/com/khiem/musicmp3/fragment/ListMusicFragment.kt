@@ -109,8 +109,8 @@ class ListMusicFragment : BaseFragment(), MusicAdapter.IMusic {
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
                     val uriImage = "content://media/external/audio/albumart/$albumId"
 
-                    val duration: Long =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+                    val duration: Int =
+                        cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
                     listSongs.add(Music(songName, songAuthor, songUrl, albumId, uriImage, duration))
                 } while (cursor.moveToNext())
             }
