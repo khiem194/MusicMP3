@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import android.view.ActionMode
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -65,7 +66,8 @@ class ListMusicFragment : BaseFragment(), MusicAdapter.IMusic {
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 BluetoothGattCharacteristic.PERMISSION_READ
             )
-        } else loadMusicFromLocal()
+        }
+        else loadMusicFromLocal()
     }
 
     override fun onRequestPermissionsResult(

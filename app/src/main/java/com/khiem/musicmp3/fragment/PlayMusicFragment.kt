@@ -1,13 +1,16 @@
 package com.khiem.musicmp3.fragment
 
+import android.animation.Animator
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.SeekBar
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.khiem.musicmp3.R
@@ -16,6 +19,7 @@ import com.khiem.musicmp3.action.MyAction
 import com.khiem.musicmp3.manager.MediaMusicManger
 import com.khiem.musicmp3.model.Music
 import kotlinx.android.synthetic.main.play_music_fragment.*
+
 
 class PlayMusicFragment : BaseFragment() {
     private var isPlaying = false
@@ -28,8 +32,6 @@ class PlayMusicFragment : BaseFragment() {
 
     override val layoutResId: Int
         get() = R.layout.play_music_fragment
-
-
 
     override fun onStart() {
         super.onStart()
@@ -58,31 +60,30 @@ class PlayMusicFragment : BaseFragment() {
     }
 
     private fun setActionFromService(actionMusic: Int) {
-        when (actionMusic){
-            MyAction.ACTION_START ->{
+        when (actionMusic) {
+            MyAction.ACTION_START -> {
                 showInfoMusic()
                 setStatusIsPlaying()
             }
-            MyAction.ACTION_PREVIOUS ->{
+            MyAction.ACTION_PREVIOUS -> {
 
             }
-            MyAction.ACTION_PAUSE ->{
+            MyAction.ACTION_PAUSE -> {
                 setStatusIsPlaying()
             }
-            MyAction.ACTION_RESUME ->{
+            MyAction.ACTION_RESUME -> {
                 setStatusIsPlaying()
             }
-            MyAction.ACTION_NEXT ->{
+            MyAction.ACTION_NEXT -> {
 
             }
-            MyAction.ACTION_CLEAR ->{
+            MyAction.ACTION_CLEAR -> {
 
             }
-
         }
     }
 
-    private fun sendActionToService(actionMusic: Int){
+    private fun sendActionToService(actionMusic: Int) {
         val intentService = Intent()
         intentService.action = MyAction.ACTION_MUSIC_TO_SERVICE
         intentService.putExtra(MyAction.ACTION_MUSIC_TO_SERVICE, actionMusic)
@@ -95,21 +96,42 @@ class PlayMusicFragment : BaseFragment() {
         tv_music_singer.text = music.author
         tv_total_music.text = music.duration?.let { Utils.formatDuration(it) }
         seekbar_music.max = MediaMusicManger.getDuration()!!
-
     }
 
-
-    private fun setStatusIsPlaying(){
-        if (isPlaying){
+    private fun setStatusIsPlaying() {
+        if (isPlaying) {
             tv_music_name.isSelected = true
             iv_PlayOrPause.setImageResource(R.drawable.ic_pasue)
+            startAnimation()
             updateSeekbar()
-        }
-        else{
+        } else {
             tv_music_name.isSelected = false
             iv_PlayOrPause.setImageResource(R.drawable.ic_playy)
+            stopAnimation()
         }
     }
+
+    private fun stopAnimation() {
+        civ_image_music.animate().cancel()
+    }
+
+    private fun startAnimation() {
+        val runnable = object : Runnable {
+            override fun run() {
+                if (isVisible){
+                    civ_image_music.animate().rotationBy(360f)
+                        .withEndAction(this)
+                        .setDuration(10000).setInterpolator(LinearInterpolator()).start()
+                }
+            }
+        }
+        if (isVisible){
+            civ_image_music.animate().rotationBy(360f)
+                .withEndAction(runnable)
+                .setDuration(10000).setInterpolator(LinearInterpolator()).start()
+        }
+    }
+
 
     override fun inIView() {
         setOnClick()
@@ -120,9 +142,9 @@ class PlayMusicFragment : BaseFragment() {
             parentFragmentManager.popBackStack()
         }
         iv_PlayOrPause.setOnClickListener {
-            if (isPlaying){
+            if (isPlaying) {
                 sendActionToService(MyAction.ACTION_PAUSE)
-            }else{
+            } else {
                 sendActionToService(MyAction.ACTION_RESUME)
             }
         }
@@ -132,7 +154,7 @@ class PlayMusicFragment : BaseFragment() {
         iv_Next.setOnClickListener {
             sendActionToService(MyAction.ACTION_NEXT)
         }
-        seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
             }
