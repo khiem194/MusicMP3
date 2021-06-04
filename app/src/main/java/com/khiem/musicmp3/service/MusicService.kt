@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.khiem.musicmp3.MainActivity
 import com.khiem.musicmp3.MyApplication
 import com.khiem.musicmp3.R
 import com.khiem.musicmp3.Utils
@@ -165,12 +166,19 @@ class MusicService : Service() {
         val uriImage = listSongs[pos].getUri()
         initMediaSession(pos)
 
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 1,
+            intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val notificationBuilder = NotificationCompat.Builder(this, MyApplication.CHANEL_ID)
 
         notificationBuilder.setSmallIcon(R.drawable.ic_music)
             .setContentTitle(musicName)
             .setContentText(musicSinger)
             .setLargeIcon(Utils.createsImageMusic(uriImage, this))
+            .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setAutoCancel(false)
             .setStyle(
@@ -181,7 +189,7 @@ class MusicService : Service() {
         if (isPlaying){
             notificationBuilder
                 .addAction(R.drawable.ic_skip_previous, "Previous", getPendingIntent(this, MyAction.ACTION_PREVIOUS)) // #0
-                .addAction(R.drawable.ic_pasue, "Pause", getPendingIntent(this, MyAction.ACTION_PAUSE)) // #1
+                .addAction(R.drawable.ic_pause_notification, "Pause", getPendingIntent(this, MyAction.ACTION_PAUSE)) // #1
                 .addAction(R.drawable.ic_skip_next, "Next", getPendingIntent(this, MyAction.ACTION_NEXT)) //2
                 .addAction(R.drawable.ic_clear, "Clear", getPendingIntent(this, MyAction.ACTION_CLEAR)) //3
         }

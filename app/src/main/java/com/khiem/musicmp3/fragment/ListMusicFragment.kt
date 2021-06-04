@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,6 +56,7 @@ class ListMusicFragment : BaseFragment(), MusicAdapter.IMusic {
         val manager = requireActivity().supportFragmentManager
         val tran = manager.beginTransaction()
         val fr = PlayMusicFragment()
+        tran.setCustomAnimations(R.anim.fade_in, R.anim.right_to_left)
         tran.replace(R.id.fl_music, fr)
         tran.addToBackStack(PlayMusicFragment.TAG)
         tran.commit()
